@@ -16,17 +16,15 @@ def handle_error(e):
 @app.route('/reverse', methods=['POST'])
 def reverse():
     data = json.loads(request.data)
-    # print(data)
-    try:
-        for keys in data:
-            if "messages" in data:
-                val = data.get('messages')
-                val = val[::-1]
-                return_data = {"messages": val}
-                return json.dumps(return_data)
-            break
-    except:
-        abort(500)
+    for keys in data:
+        if "messages" in keys:
+            val = data.get('messages')[::-1]
+            # val = val[::-1]
+            return_data = {"messages": val}
+            return json.dumps(return_data)
+
+        # json.dumps("invalid request received")
+        return abort(500, "invalid request received")
 
 
 if __name__ == "__main__":

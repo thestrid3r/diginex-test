@@ -16,35 +16,29 @@ def handle_error(e):
     return jsonify(error=str(e)), code
 
 
-url = os.environ["BACKEND_URL"]  # url of reverse api app
+URL = os.environ["BACKEND_URL"]  # url of reverse api app
 seed(1)  # seeding random generator
 
 
 @app.route('/api', methods=['POST'])
 def reverse():
     data = json.loads(request.data)
-    # print(data)
-    try:
-        for keys in data:
-            if "messages" in keys:
-                val = data.get('messages')  # reading from requests
-                # print(val)
-                req = {"messages": val}  # payload
-                # print(req)
-                payload = json.dumps(req)
-                headers = {
-                    'content-type': "application/json",
-                }
-                response = requests.request(
-                    "POST", url, data=payload, headers=headers)
-                get_req = {}
-                get_req = response.json()
-                get_req.update({"rand": random()})
-                # print(get_req)
-                return json.dumps(get_req)
-            break
-    except:
-        abort(500)
+    for keys in data:
+        if "messages" in keys:
+            val = data.get('messages')  # reading from requests
+            req = {"messages": val}  # payload
+            payload = json.dumps(req)
+            headers = {
+                'content-type': "application/json",
+            }
+            response = requests.request(
+                "POST", URL, data=payload, headers=headers)
+            get_req = {}
+            get_req = response.json()
+            get_req.update({"rand": random()})
+            return json.dumps(get_req)
+
+        return abort(500, "invalid request received")
 
 
 if __name__ == "__main__":
